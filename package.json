@@ -1,0 +1,13 @@
+{
+  "name": "omegle-clone",
+  "version": "1.0.0",
+  "description": "A clone of Omegle for anonymous online chats.",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.0.0"
+  }
+}
