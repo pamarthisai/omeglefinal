@@ -21,6 +21,7 @@ navigator.mediaDevices.getUserMedia({
     myVideo.play();
   });
   videoGrid.append(myVideo);
+  socket.emit('join-room', ROOM_ID);
 });
 
 socket.on('all-users', users => {
@@ -33,45 +34,45 @@ socket.on('offer', handleReceiveCall);
 socket.on('answer', handleAnswer);
 socket.on('ice-candidate', handleNewICECandidateMsg);
 
-const handleReceiveCall = async (incoming) => {
+async function handleReceiveCall(incoming) {
   await createPeerConnection();
   peerConnection.setRemoteDescription(new RTCSessionDescription(incoming.sdp));
   const answer = await peerConnection.createAnswer();
   await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
   socket.emit('answer', { target: incoming.caller, sdp: peerConnection.localDescription });
-};
+}
 
-const handleAnswer = (message) => {
+function handleAnswer(message) {
   const desc = new RTCSessionDescription(message.sdp);
   peerConnection.setRemoteDescription(desc).catch(e => console.log(e));
-};
+}
 
-const handleNewICECandidateMsg = (incoming) => {
+function handleNewICECandidateMsg(incoming) {
   const candidate = new RTCIceCandidate(incoming);
   peerConnection.addIceCandidate(candidate).catch(e => console.log(e));
-};
+}
 
-const callUser = async (userId) => {
+async function callUser(userId) {
   await createPeerConnection();
   const offer = await peerConnection.createOffer();
   await peerConnection.setLocalDescription(new RTCSessionDescription(offer));
   socket.emit('offer', { target: userId, sdp: peerConnection.localDescription });
-};
+}
 
-const createPeerConnection = async () => {
+async function createPeerConnection() {
   peerConnection = new RTCPeerConnection(config);
   peerConnection.onicecandidate = handleICECandidateEvent;
   peerConnection.ontrack = handleTrackEvent;
   localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-};
+}
 
-const handleICECandidateEvent = (event) => {
+function handleICECandidateEvent(event) {
   if (event.candidate) {
     socket.emit('ice-candidate', { target: peerConnection.remoteDescription, candidate: event.candidate });
   }
-};
+}
 
-const handleTrackEvent = (event) => {
+function handleTrackEvent(event) {
   remoteStream = event.streams[0];
   const remoteVideo = document.createElement('video');
   remoteVideo.srcObject = remoteStream;
@@ -79,6 +80,6 @@ const handleTrackEvent = (event) => {
     remoteVideo.play();
   });
   videoGrid.append(remoteVideo);
-};
+}
 
-socket.emit('join-room', ROOM_ID);
+const ROOM_ID = Math.random().toString(36).substring(2, 15);
