@@ -10,15 +10,15 @@ const server = http.createServer(app);
 // Enable CORS
 app.use(cors());
 
+// Serve static files from the 'client' directory
+app.use(express.static(path.join(__dirname, '../client')));
+
 const io = socketIo(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
   }
 });
-
-// Serve static files from the 'client' directory
-app.use(express.static(path.join(__dirname, '../client')));
 
 // Define a route handler for the default home page
 app.get('/', (req, res) => {
