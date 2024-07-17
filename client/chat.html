@@ -1,31 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omegle - Chat</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="omegle.ico" type="image/x-icon">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omegle Chat</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <div id="chat-container">
-        <div id="video-chat">
-            <video id="localVideo" autoplay></video>
-            <video id="remoteVideo" autoplay></video>
-        </div>
-        <div id="text-chat">
-            <div id="messages"></div>
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button id="sendMessage">Send</button>
-            <button id="skipButton">Skip</button>
-        </div>
+  <div class="chat-container">
+    <header>
+      <h1>Chat Room</h1>
+    </header>
+    <div class="chat-box" id="chat-box"></div>
+    <div class="input-box">
+      <input type="text" id="message-input" placeholder="Type a message...">
+      <button id="send-button">Send</button>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="js/main.js"></script>
-    <div class="landing-container">
-        <img src="omegle.png" alt="Omegle Logo" class="logo">
-        <div class="landing-container">
-            <img src="talktostrangers.png" alt="Omegle Logo" class="logo">
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
