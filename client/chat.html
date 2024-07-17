@@ -11,13 +11,16 @@
     <header>
       <h1>Chat Room</h1>
     </header>
-    <div class="chat-box" id="chat-box"></div>
+    <div id="video-grid"></div>
     <div class="input-box">
       <input type="text" id="message-input" placeholder="Type a message...">
       <button id="send-button">Send</button>
     </div>
   </div>
   <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const ROOM_ID = Math.random().toString(36).substring(2, 15);
+  </script>
   <script src="js/main.js"></script>
 </body>
 </html>
