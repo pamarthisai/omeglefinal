@@ -1,87 +1,36 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const path = require('path');
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-app.use(express.static('client'));
+// Serve static files from the 'client' directory
+app.use(express.static(path.join(__dirname, '../client')));
 
-const users = {};
-
-io.on('connection', socket => {
-    console.log('A user connected');
-
-    socket.on('join', () => {
-        users[socket.id] = socket;
-        findPeerForSocket(socket);
-    });
-
-    socket.on('message', message => {
-        const peerSocket = users[socket.peerId];
-        if (peerSocket) {
-            peerSocket.emit('message', message);
-        }
-    });
-
-    socket.on('offer', offer => {
-        const peerSocket = users[socket.peerId];
-        if (peerSocket) {
-            peerSocket.emit('offer', offer);
-        }
-    });
-
-    socket.on('answer', answer => {
-        const peerSocket = users[socket.peerId];
-        if (peerSocket) {
-            peerSocket.emit('answer', answer);
-        }
-    });
-
-    socket.on('candidate', candidate => {
-        const peerSocket = users[socket.peerId];
-        if (peerSocket) {
-            peerSocket.emit('candidate', candidate);
-        }
-    });
-
-    socket.on('skip', () => {
-        const peerSocket = users[socket.peerId];
-        if (peerSocket) {
-            peerSocket.peerId = null;
-            peerSocket.emit('new-peer');
-            findPeerForSocket(peerSocket);
-        }
-        socket.peerId = null;
-        socket.emit('new-peer');
-        findPeerForSocket(socket);
-    });
-
-    socket.on('disconnect', () => {
-        console.log('User disconnected');
-        const peerSocket = users[socket.peerId];
-        if (peerSocket) {
-            peerSocket.peerId = null;
-            peerSocket.emit('message', 'A user has left the chat');
-        }
-        delete users[socket.id];
-    });
+// Define a route handler for the default home page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-function findPeerForSocket(socket) {
-    for (let id in users) {
-        if (users[id].peerId === null && users[id].id !== socket.id) {
-            users[id].peerId = socket.id;
-            socket.peerId = users[id].id;
-            users[id].emit('new-peer');
-            socket.emit('new-peer');
-            return;
-        }
-    }
-    socket.peerId = null;
-}
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  
+  // Handle disconnect event
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
 
+  // Additional socket.io event handling can go here
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+  });
+});
+
+// Set the port to the environment variable PORT or default to 3000
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
