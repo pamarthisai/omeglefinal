@@ -1,71 +1,44 @@
+/* Example styles for better mobile responsiveness */
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #f0f0f0;
-    margin: 0;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
 }
 
-.landing-container {
-    text-align: center;
+.container {
+  max-width: 100%;
+  padding: 10px;
+  margin: 0 auto;
 }
 
-.logo {
-    width: 200px;
+header, footer {
+  text-align: center;
+  padding: 10px 0;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin-top: 20px;
-    cursor: pointer;
-    background-color: #ffa500;
-    border: none;
-    border-radius: 5px;
-    color: white;
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
-#chat-container {
-    width: 80%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
+.chat-box {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
 }
 
-#video-chat {
-    flex: 1;
-    display: flex;
+.input-box {
+  display: flex;
 }
 
-video {
-    width: 50%;
-    border: 1px solid #ccc;
-    margin: 5px;
+.input-box input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
 }
 
-#text-chat {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    background: #fff;
-}
-
-#messages {
-    flex: 1;
-    height: 50px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    margin-right: 10px;
-}
-
-#messageInput {
-    flex: 1;
-    padding: 10px;
-}
-
-#sendMessage, #skipButton {
-    padding: 10px 20px;
-    margin-left: 5px;
+.input-box button {
+  padding: 10px;
+  font-size: 16px;
 }
