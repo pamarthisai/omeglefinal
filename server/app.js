@@ -24,38 +24,38 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-const peers = {};
+const rooms = {};
 
 io.on('connection', (socket) => {
   console.log('a user connected:', socket.id);
 
   socket.on('join-room', (roomId) => {
-    if (!peers[roomId]) {
-      peers[roomId] = [];
+    if (!rooms[roomId]) {
+      rooms[roomId] = [];
     }
-    peers[roomId].push(socket.id);
+    rooms[roomId].push(socket.id);
 
-    const otherUsers = peers[roomId].filter(id => id !== socket.id);
+    const otherUsers = rooms[roomId].filter(id => id !== socket.id);
     socket.emit('all-users', otherUsers);
   });
 
-  socket.on('offer', payload => {
+  socket.on('offer', (payload) => {
     io.to(payload.target).emit('offer', payload);
   });
 
-  socket.on('answer', payload => {
+  socket.on('answer', (payload) => {
     io.to(payload.target).emit('answer', payload);
   });
 
-  socket.on('ice-candidate', incoming => {
+  socket.on('ice-candidate', (incoming) => {
     io.to(incoming.target).emit('ice-candidate', incoming.candidate);
   });
 
   socket.on('disconnect', () => {
-    for (const roomId in peers) {
-      peers[roomId] = peers[roomId].filter(id => id !== socket.id);
-      if (peers[roomId].length === 0) {
-        delete peers[roomId];
+    for (const roomId in rooms) {
+      rooms[roomId] = rooms[roomId].filter(id => id !== socket.id);
+      if (rooms[roomId].length === 0) {
+        delete rooms[roomId];
       }
     }
   });
