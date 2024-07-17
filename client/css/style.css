@@ -42,3 +42,18 @@ header, footer {
   padding: 10px;
   font-size: 16px;
 }
+
+/* Video styles for better responsiveness */
+#video-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#video-grid video {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  margin: 5px;
+}
